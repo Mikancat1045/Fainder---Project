@@ -211,6 +211,30 @@
 <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
 
 <script>
+    // --- ボット検知・表示切り替え ---
+(function() {
+    const ua = navigator.userAgent.toLowerCase();
+    // 主要なボットやクローラーのキーワード
+    const botKeywords = ["googlebot", "bingbot", "yahoobot", "baiduspider", "slurp", "crawler", "spider", "robot"];
+    
+    const isBot = botKeywords.some(keyword => ua.includes(keyword));
+
+    if (isBot) {
+        // ボットの場合：SNSの要素を消して、偽のコンテンツを挿入
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.innerHTML = `
+                <div style="padding: 50px; text-align: center; color: #fff; background: #131314; height: 100vh;">
+                    <h1>Mikan Project Portfolio</h1>
+                    <p>This is a web development testing site for personal learning purposes.</p>
+                    <p>Exploring modern UI design and static web technologies.</p>
+                    <hr style="width: 50px; margin: 20px auto; border: 1px solid #444;">
+                    <p>© 2026 Mikan Programming Lab.</p>
+                </div>
+            `;
+        });
+    }
+})();
+    
     const firebaseConfig = {
         apiKey: "AIzaSyAYsZXBexcfcDzR2XZv7lshV-aDwKUHQXQ",
         authDomain: "fainder-snsapp.firebaseapp.com",
