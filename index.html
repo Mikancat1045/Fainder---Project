@@ -40,9 +40,15 @@
         <div class="gate-box">
             <h1>Fainder Project</h1>
             <p style="color: #888; margin-bottom: 20px;">Access Protected</p>
-            <input type="password" id="gate-pass" placeholder="Password">
-            <br>
-            <button onclick="verifyGate()">Enter</button>
+<input type="password" id="gate-pass" placeholder="Password">
+<br>
+<button onclick="verifyGate()">Enter</button>
+
+<form onsubmit="verifyGate(); return false;">
+    <input type="password" id="gate-pass" placeholder="Password">
+    <br>
+    <button type="submit">Enter</button>
+</form>
         </div>
     </div>
 
