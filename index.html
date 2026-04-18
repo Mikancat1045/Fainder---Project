@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mikan Lab Portfolio</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background: #fff; }
-        #dummy-page { padding: 40px; text-align: center; }
-        .gate-banner { position: fixed; bottom: 0; width: 100%; background: #202124; color: #fff; padding: 20px; text-align: center; }
-        button { cursor: pointer; padding: 8px 16px; }
+        body { font-family: sans-serif; margin: 0; background: #fff; color: #333; }
+        .dummy-content { padding: 50px; text-align: center; }
+        .gate-banner { position: fixed; bottom: 0; width: 100%; background: #202124; color: #fff; padding: 20px; text-align: center; box-sizing: border-box; }
+        button { cursor: pointer; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; }
+        input { padding: 8px; margin: 0 10px; border-radius: 4px; border: 1px solid #555; background: #333; color: white; }
     </style>
 </head>
 <body id="main-body">
 
-    <div id="dummy-page">
+    <div id="dummy-page" class="dummy-content">
         <h1>Research Portfolio</h1>
-        <p>JavaScriptとUIデザインの検証サイトです。</p>
+        <p>Web制作とUIデザインの学習記録です。</p>
     </div>
 
     <div id="gate-banner" class="gate-banner">
         <div id="step-1">
-            <p>コンテンツを表示するには同意してください。</p>
+            <span>サイト閲覧には同意が必要です。</span>
             <button onclick="nextStep()">同意する</button>
         </div>
         <div id="step-2" style="display: none;">
