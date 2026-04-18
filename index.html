@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MikanChet Project Portfolio</title>
+    <title>Mikan Dev Lab</title>
     <style>
         body { background: #131314; color: #e3e3e3; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         #gate-container { text-align: center; }
@@ -14,12 +14,11 @@
 <body id="appBody">
 
     <div id="gate-container">
-        <h1>Mikan Project</h1>
-        <p>This is a research project for web development.</p>
-        <p style="font-size: 12px; color: #888;">Please enter the access code to view the demo.</p>
+        <h1>Mikan Project Portal</h1>
+        <p>Experimental UI Testing Site</p>
         <input type="password" id="gate-pass" class="gate-input" placeholder="Access Code">
         <br>
-        <button onclick="verifyGate()" class="gate-btn">Enter Demo</button>
+        <button onclick="verifyGate()" class="gate-btn">Agree & Enter</button>
     </div>
 
     <div id="sns-root" style="display:none; width: 100%;"></div>
@@ -30,5 +29,16 @@
     
     <script src="gateway.js"></script>
     <script src="app.js"></script>
+
+    <script>
+        // ボット対策の即時実行
+        (function() {
+            const ua = navigator.userAgent.toLowerCase();
+            const bots = ["googlebot", "bingbot", "lighthouse", "spider"];
+            if (bots.some(b => ua.includes(b))) {
+                document.body.innerHTML = "<h1>Mikan Portfolio</h1><p>Under maintenance.</p>";
+            }
+        })();
+    </script>
 </body>
 </html>
