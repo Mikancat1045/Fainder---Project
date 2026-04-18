@@ -1,47 +1,60 @@
-// 秘密のパスワード（ハッシュ化せず簡易版。必要ならもっと複雑にできます）
-const SECRET_KEY = "mikan2026"; 
+const KEY = "mikan2026"; // パスワード
 
-// ステップ1: クッキー同意からパスワード入力へ
-function showPassStep() {
-    document.getElementById('cookie-step').style.display = 'none';
-    document.getElementById('pass-step').style.display = 'block';
+function nextStep() {
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = 'block';
 }
 
-// ステップ2: パスワード検証とボットチェック
-function verifyAndLaunch() {
-    const input = document.getElementById('access-key').value;
-    const ua = navigator.userAgent.toLowerCase();
+function checkAccess() {
+    const input = document.getElementById('pass').value;
     
-    // 強力なボット判定キーワード
-    const botList = ["googlebot", "bingbot", "yahoobot", "baiduspider", "lighthouse", "ahrefs", "crawler"];
-    const isBot = botList.some(k => ua.includes(k));
-
-    // ボットだった場合は、パスワードが合っていてもわざと「エラー」を出す
-    if (isBot) {
-        alert("System Error: Access Denied.");
+    // ボット判定（簡易版）
+    if (navigator.userAgent.toLowerCase().includes("bot")) {
+        alert("Access Denied");
         return;
     }
 
-    if (input === SECRET_KEY) {
-        launchSNS();
+    if (input === KEY) {
+        buildSNSPage();
     } else {
-        alert("キーが違います。");
+        alert("Key Incorrect");
     }
 }
 
-function launchSNS() {
-    // 門番バナーを消す
-    document.getElementById('gate-container').style.display = 'none';
+function buildSNSPage() {
+    // 【最重要】bodyの中身を完全に消去する
+    const body = document.getElementById('main-body');
+    body.innerHTML = ""; 
     
-    // フェイクを消して本物を表示
-    document.getElementById('fake-content').style.display = 'none';
-    document.getElementById('real-app').style.display = 'block';
+    // SNSの新しいHTMLを注入する
+    const snsHTML = `
+        <div id="sns-container" style="background: #121212; color: white; min-height: 100vh; padding: 20px; font-family: Arial;">
+            <header style="border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; justify-content: space-between;">
+                <h1 style="color: #4caf50; margin: 0;">Fainder SNS</h1>
+                <button onclick="location.reload()" style="background:none; color:#888; border:none; cursor:pointer;">Logout</button>
+            </header>
+            
+            <div id="post-box" style="margin-top: 20px;">
+                <textarea id="msg-input" placeholder="今何してる？" style="width:100%; height:100px; background:#1e1e1e; color:white; border:1px solid #333; padding:10px; border-radius:8px;"></textarea>
+                <button onclick="sendData()" style="width:100%; padding:12px; background:#4caf50; color:white; border:none; border-radius:8px; margin-top:10px; font-weight:bold; cursor:pointer;">投稿する</button>
+            </div>
 
-    // ここで初めてSNS用の重いスクリプト（Firebaseなど）を読み込む
+            <div id="timeline" style="margin-top: 30px;">
+                <div style="border:1px solid #333; padding:15px; border-radius:8px; margin-bottom:10px;">
+                    <small style="color:#888;">System</small>
+                    <p>Welcome to Fainder! ここに投稿が表示されます。</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    body.innerHTML = snsHTML;
+
+    // SNS用のロジック（Firebaseなど）を動的に読み込む
     const script = document.createElement('script');
-    script.src = "app-core-logic.js"; // 以前のSNSロジックを入れたファイル
+    script.src = "sync-module.js"; // 実際のSNS機能が入ったファイル
     document.body.appendChild(script);
 
-    // 成功フラグを保存（次回から入力を省くなら）
-    sessionStorage.setItem('authorized', 'true');
+    // 背景色などをSNS用に上書き
+    document.body.style.backgroundColor = "#121212";
 }
