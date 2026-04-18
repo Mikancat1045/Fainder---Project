@@ -61,5 +61,34 @@
         <button class="launch-btn" onclick="location.href='index2.html'">Fainderを起動する</button>
     </div>
 
+    <script>
+    // 右クリック禁止
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // キーボードショートカット禁止 (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) { // F12
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // ソース表示
+            return false;
+        }
+    };
+</script>
+    <script>
+    setInterval(function() {
+        debugger;
+    }, 100);
+</script>
+    <script>
+    setInterval(function() {
+        console.clear();
+        console.log("%c警告: ここでコードをいじらないでください", "color: red; font-size: 30px; font-weight: bold;");
+    }, 1000);
+</script>
+    
 </body>
 </html>
