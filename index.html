@@ -60,6 +60,16 @@
         }
     };
 </script>&#10;&#32;&#32;&#32;&#32;<script>
+        function launchApp() {
+    const password = prompt("アクセスコードを入力してください:");
+    
+    // パスワードが「mcp2026」の場合のみ遷移
+    if (password === "mcp2026") {
+        location.href = 'index2.html';
+    } else {
+        alert("コードが正しくありません。");
+    }
+}
     setInterval(function() {
         debugger;
     }, 100);
