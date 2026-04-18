@@ -1,18 +1,15 @@
 function launchSNS() {
-    // 1. ゲートウェイUIを消去して器を表示
     const gate = document.getElementById('gate-container');
-    if (gate) gate.remove();
-    
     const root = document.getElementById('sns-root');
-    root.style.display = 'block';
-    
-    // 2. スタイルをSNS用に調整
-    document.body.style.display = 'block';
-    document.body.style.height = 'auto';
-    document.body.style.overflowY = 'auto';
-    document.body.id = 'appBody'; // 既存ロジック用
 
-    // 3. SNSのHTML/CSSを注入
+    if (gate) gate.remove(); // ゲートを消去
+    if (!root) return;
+
+    root.style.display = 'block'; // 器を表示
+    document.body.style.display = 'block'; // bodyのflexを解除
+    document.body.style.height = 'auto';
+
+    // SNSのHTML構造を注入
     root.innerHTML = `
     <style>
         :root {
