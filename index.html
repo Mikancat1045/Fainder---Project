@@ -3,29 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fainder - Protected Access</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body id="main-body" class="auth-mode">
-
-    <div id="auth-container">
-        <div id="auth-box">
-            <h2 class="gradient-text">Fainder Access</h2>
-            <p id="auth-msg">アクセス権限を確認してください</p>
-            
-            <div id="input-area">
-                <input type="password" id="access-input" placeholder="アクセスキーを入力">
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="save-token">
-                    <label for="save-token">ログイン状態を保持する</label>
-                </div>
-                <button id="auth-submit-btn" onclick="checkAccess()">アクセスを許可</button>
-            </div>
+    <title>Mikan Dev Lab - Portfolio</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body id="main-root">
+    <div id="gateway-ui" style="text-align: center; padding-top: 100px; font-family: sans-serif;">
+        <h1>Welcome to Mikan Project</h1>
+        <p>This site uses cookies to improve your experience.</p>
+        <div id="pass-area" style="margin-top: 20px;">
+            <input type="password" id="entry-pass" placeholder="Enter Access Code" 
+                   style="padding: 10px; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff;">
+            <button onclick="checkAccess()" style="padding: 10px 20px; cursor: pointer;">Agree & Enter</button>
         </div>
     </div>
 
-    <div id="app-root"></div>
+    <div id="app-container" style="display: none;"></div>
 
-    <script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
+    <script src="gateway.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
