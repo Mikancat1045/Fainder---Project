@@ -1,36 +1,36 @@
 const _K = "mikan2026"; 
 
+// 同意ボタンを押した時
 function nextStep() {
-    document.getElementById('step-1').style.display = 'none';
-    document.getElementById('step-2').style.display = 'block';
+    const s1 = document.getElementById('step-1');
+    const s2 = document.getElementById('step-2');
+    if(s1 && s2) {
+        s1.style.display = 'none';
+        s2.style.display = 'block';
+    }
 }
 
+// パスワードチェック
 function checkAccess() {
-    const input = document.getElementById('access-input').value;
-    const ua = navigator.userAgent.toLowerCase();
-    
-    // ボット判定
-    if (["googlebot", "crawler", "spider"].some(b => ua.includes(b))) {
-        alert("Busy."); return;
-    }
-
-    if (input === _K) {
+    const val = document.getElementById('access-input').value;
+    if (val === _K) {
         buildSNS();
     } else {
-        alert("Invalid Token.");
+        alert("トークンが違います");
     }
 }
 
+// SNSの組み立て
 function buildSNS() {
-    // ページを完全にリセット
     const body = document.getElementById('main-body');
-    body.innerHTML = "";
     
-    // あなたが作ったSNSのHTML + CSS + JSロジックを流し込む
-    // ※ 内部にボット検知スクリプトも含まれています
+    // 背景色を即座に変更
+    body.style.backgroundColor = "#131314";
+
+    // SNSの本体（HTMLとCSSのみ）
+    // ※ <html>や<body>タグは含めず、中身の<div>からスタートさせます
     body.innerHTML = `
         <style>
-        :root {
             --bg-color: #131314;
             --nav-bg: rgba(19, 19, 20, 1);
             --text-gemini: #e3e3e3;
@@ -106,133 +106,22 @@ function buildSNS() {
         .btn-sponsor { background: #f4b400; color: #000; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
         .unblock-btn { background: #d96570; color: white; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 12px; }
         </style>
-        
-<header>
-    <button class="menu-btn" onclick="toggleSidebar()">≡</button>
-    <div class="app-brand" onclick="showPage('home')">
-        <img id="app-main-logo" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80" alt="App Logo">
-        <span class="app-name">Fainder</span>
-    </div>
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-bar" placeholder="検索...">
-    </div>
-    <img id="header-user-icon" onclick="showPage('settings')" alt="User Icon">
-</header>
 
-<div id="overlay" onclick="toggleSidebar()"></div>
+        <div id="sns-wrapper">
+            <header>
+                <div style="font-size:20px; font-weight:bold; color:#4285f4;">Fainder</div>
+            </header>
+            
+            <section id="home" class="page active">
+                <h1>こんにちは！</h1>
+                <div id="postsList">読み込み中...</div>
+            </section>
 
-<nav id="sidebar">
-    <div onclick="showPage('home')" style="padding:15px 25px; cursor:pointer;"> ホーム</div>
-    <div onclick="showPage('timeline')" style="padding:15px 25px; cursor:pointer;"> タイムライン</div>
-    <div onclick="showPage('promote')" style="padding:15px 25px; cursor:pointer;"> 拡散・宣伝</div>
-    <div id="sidebar-my-profile" onclick="openMyProfile()" style="padding:15px 25px; cursor:pointer; display:none;"> プロフィール</div>    
-    <div onclick="showPage('notifications')" style="padding:15px 25px; cursor:pointer;"> 通知</div>
-    <div onclick="showPage('settings')" style="padding:15px 25px; cursor:pointer;"> 設定</div>
-    
-    <div id="loginBtn" onclick="loginWithGoogle()" style="margin: 10px 20px; padding:12px; cursor:pointer; background:white; color:#757575; border-radius:4px; display:flex; align-items:center; font-weight:500; border:1px solid #dadce0;">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px; margin-right:10px;">
-        Googleでログイン
-    </div>
-</nav>
-
-<section id="home" class="page active">
-    <h1 style="background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:40px;">
-        こんにちは、<span id="display-name">Guest</span>
-    </h1>
-    <p style="font-size:18px; color:#8ab4f8;">Fainderへようこそ！</p>
-</section>
-
-<section id="timeline" class="page">
-    <h2>タイムライン</h2>
-    <div class="timeline-tabs">
-        <button id="tab-new" class="tab-btn active" onclick="switchTab('new')">最新</button>
-    </div>
-    <div class="post-input-container">
-        <div class="post-input-wrapper">
-            <img id="user-post-icon" src="https://api.dicebear.com/7.x/avataaars/svg?seed=guest" class="user-icon-img">
-            <textarea id="postText" placeholder="今何してる？" rows="1" oninput="autoResize(this)"></textarea>
-            <button onclick="addPost()" style="background:none; border:none; color:#8ab4f8; cursor:pointer;">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-            </button>
-        </div>
-    </div>
-    <div id="postsList"></div>
-</section>
-
-<section id="promote" class="page">
-    <h2>🚀 拡散・共有・宣伝</h2>
-    <div class="post-input-container">
-        <div style="margin-bottom: 10px;">
-            <label style="font-size: 12px; color: #8ab4f8;">カテゴリ：</label>
-            <select id="promoteTag" style="background: #28292a; color: white; border: 1px solid #444; border-radius: 8px; padding: 5px;">
-                <option value=" 動画"> 動画</option>
-                <option value=" アプリ/サイト"> アプリ/サイト</option>
-                <option value=" 世界情勢"> 世界情勢</option>
-                <option value=" 流行り"> 流行り</option>
-                <option value=" その他宣伝"> その他宣伝</option>
-            </select>
-        </div>
-        <div class="post-input-wrapper">
-            <textarea id="promoteText" placeholder="URLや説明を入力して拡散しよう！" rows="2" oninput="autoResize(this)"></textarea>
-            <button onclick="addPromotePost()" style="background:none; border:none; color:#f4b400; cursor:pointer;">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-            </button>
-        </div>
-    </div>
-    <div id="promoteList"></div>
-</section>
-
-<section id="notifications" class="page">
-    <h2> 通知</h2>
-    <div id="notificationsList"></div>
-</section>
-
-<section id="profile" class="page">
-    <div class="profile-header" style="text-align: center; padding: 30px 20px; background: #1e1f20; border-radius: 24px; margin-bottom: 20px;">
-        <img id="prof-icon" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #4285f4; object-fit: cover;">
-        <h2 id="prof-name" style="margin: 10px 0 5px 0;">---</h2>
-        <div class="stat-container">
-            <div class="stat-item" onclick="switchProfileTab('following')">
-                <div id="count-following" class="stat-value">0</div>
-                <div class="stat-label">フォロー</div>
             </div>
-            <div class="stat-item" onclick="switchProfileTab('followers')">
-                <div id="count-followers" class="stat-value">0</div>
-                <div class="stat-label">フォロワー</div>
-            </div>
-        </div>
-        <p id="prof-id" style="color: #888; font-size: 14px; margin-bottom: 15px;"></p>
-        <div id="prof-actions" style="display: flex; justify-content: center; gap: 10px;"></div>
-    </div>
-
-    <div class="timeline-tabs">
-        <button id="p-tab-posts" class="prof-tab-btn active" onclick="switchProfileTab('posts')">投稿</button>
-        <button id="p-tab-following" class="prof-tab-btn" onclick="switchProfileTab('following')">フォロー</button>
-        <button id="p-tab-followers" class="prof-tab-btn" onclick="switchProfileTab('followers')">フォロワー</button>
-        <button id="p-tab-blocks" class="prof-tab-btn" onclick="switchProfileTab('blocks')" style="display:none;">ブロック</button>
-        <button id="p-tab-sponsors" class="prof-tab-btn" onclick="switchProfileTab('sponsors')">スポンサー</button>
-    </div>
-    <div id="profile-content-area"></div>
-</section>
-
-<section id="settings" class="page">
-    <h2>設定</h2>
-    <div style="background:#1e1f20; padding:20px; border-radius:16px; border: 1px solid #333;">
-        <label>表示名</label>
-        <input type="text" id="input-name" style="width:100%; padding:10px; margin:10px 0 20px 0; background:#28292a; border:1px solid #444; color:white; border-radius:8px; box-sizing: border-box;">
-        <label>アイコンURL</label>
-        <input type="text" id="input-icon" style="width:100%; padding:10px; margin:10px 0 20px 0; background:#28292a; border:1px solid #444; color:white; border-radius:8px; box-sizing: border-box;">
-        <button onclick="updateProfile()" style="width:100%; padding:12px; background:#4285f4; border:none; color:white; border-radius:8px; cursor:pointer; font-weight:bold;">プロフィールの保存</button>
-        <button onclick="logoutAction()" style="width:100%; padding:12px; background:#d96570; border:none; color:white; border-radius:8px; margin-top:10px; cursor:pointer;">ログアウト</button>
-    </div>
-</section>
     `;
 
-    // 以前のFirebase設定やSNSの関数(toggleSidebar, loadPosts等)をここに貼り付けるか、
-    // 別ファイル(core-sync.js)から読み込む
-    const s = document.createElement('script');
-    s.src = "core-sync.js"; 
-    document.body.appendChild(s);
-
-    document.body.style.backgroundColor = "#131314";
+    // 最後にFirebaseなどのロジックファイルを読み込む
+    const script = document.createElement('script');
+    script.src = "core-sync.js"; 
+    document.body.appendChild(script);
 }
