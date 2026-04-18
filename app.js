@@ -358,17 +358,6 @@ function launchSNS() {
 
     let currentTimelineTab = 'new';
 
-async function switchTab(tabType) {
-    currentTimelineTab = tabType;
-    
-    // タブの見た目の切り替え
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`tab-${tabType}`).classList.add('active');
-    
-    // 投稿の再読み込み
-    loadPosts();
-}
-
 function loadPosts() {
     db.collection("posts").orderBy("createdAt", "desc").onSnapshot(async snap => {
         const list = document.getElementById('postsList');
@@ -410,27 +399,6 @@ function loadPosts() {
 }
 
 // プロフィールのタブ切り替えロジックの修正
-async function switchProfileTab(type) {
-    const area = document.getElementById('profile-content-area');
-    area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
-
-    // 全てのプロフィールタブから active クラスを外す
-    document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
-    
-    // クリックされたタブに active クラスを付ける
-    const activeTab = document.getElementById(`p-tab-${type}`);
-    if (activeTab) activeTab.classList.add('active');
-
-    let html = "";
-    // --- データの取得処理 ---
-    if (type === 'posts') {
-        const snap = await db.collection("posts").where("uid", "==", currentProfileUid).orderBy("createdAt", "desc").get();
-        snap.forEach(doc => html += renderPostCard(doc.id, doc.data()));
-    } 
-    // ...（フォロー、スポンサーの処理はそのまま）
-    
-    area.innerHTML = html || "<p style='text-align:center; color:#666;'>データがありません</p>";
-}
 
     window.toggleSidebar = () => {
         document.getElementById('appBody').classList.toggle('sidebar-open');
@@ -464,4 +432,57 @@ async function switchProfileTab(type) {
             });
         });
     }
+
+    // --- 修正されたロジック部分 ---
+
+window.switchTab = async (tabType) => {
+    currentTimelineTab = tabType;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const target = document.getElementById(`tab-${tabType}`);
+    if (target) target.classList.add('active');
+    loadPosts();
+};
+
+window.switchProfileTab = async (type) => {
+    const area = document.getElementById('profile-content-area');
+    if (!area) return;
+    area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
+
+    document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
+    const activeTab = document.getElementById(`p-tab-${type}`);
+    if (activeTab) activeTab.classList.add('active');
+
+    let html = "";
+    try {
+        if (type === 'posts') {
+            const snap = await db.collection("posts").where("uid", "==", currentProfileUid).orderBy("createdAt", "desc").get();
+            snap.forEach(doc => html += renderPostCard(doc.id, doc.data()));
+        } else if (type === 'following') {
+            const snap = await db.collection("follows").where("followerId", "==", currentProfileUid).get();
+            for (const doc of snap.docs) {
+                const u = await db.collection("users").doc(doc.data().followingId).get();
+                const ud = u.data() || { name: "不明", icon: "" };
+                html += `<div class="list-item"><div class="list-item-info" onclick="showUserProfile('${u.id}')"><img src="${ud.icon}" class="user-icon-img"><span>${ud.name}</span></div></div>`;
+            }
+        } else if (type === 'followers') {
+            const snap = await db.collection("follows").where("followingId", "==", currentProfileUid).get();
+            for (const doc of snap.docs) {
+                const u = await db.collection("users").doc(doc.data().followerId).get();
+                const ud = u.data() || { name: "不明", icon: "" };
+                html += `<div class="list-item"><div class="list-item-info" onclick="showUserProfile('${u.id}')"><img src="${ud.icon}" class="user-icon-img"><span>${ud.name}</span></div></div>`;
+            }
+        } else if (type === 'sponsors') {
+            const snap = await db.collection("sponsors").where("toUid", "==", currentProfileUid).get();
+            snap.forEach(doc => {
+                const s = doc.data();
+                html += `<div class="list-item"><div class="list-item-info"><span><strong>${s.fromName}</strong> さん</span></div><div class="sponsor-msg">${s.message || ""}</div></div>`;
+            });
+        }
+    } catch (e) {
+        console.error(e);
+        html = "<p style='text-align:center; color:red;'>エラーが発生しました</p>";
+    }
+    
+    area.innerHTML = html || "<p style='text-align:center; color:#666;'>データがありません</p>";
+};
 }
