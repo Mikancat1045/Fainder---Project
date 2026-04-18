@@ -56,24 +56,10 @@ function launchSNS() {
         .page.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.timeline-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-    overflow-x: auto; /* 横スクロールを許可 */
-    -webkit-overflow-scrolling: touch;
-}
-.tab-btn {
-    flex-shrink: 0; /* ボタンが潰れないようにする */
-}
-/* 選択されているタブのデザイン */
-.tab-btn.active, .prof-tab-btn.active {
-    background: #303134 !important; /* 背景を明るいグレーに */
-    color: #8ab4f8 !important;      /* 文字を青色に */
-    border-bottom: 2px solid #8ab4f8; /* 下線をつけるとより「タブ」っぽくなります */
-}        
+        .timeline-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; overflow-x: auto; }
+        .tab-btn, .prof-tab-btn { background: none; border: none; color: #888; padding: 8px 16px; cursor: pointer; border-radius: 20px; transition: 0.2s; white-space: nowrap; }
+        .tab-btn.active, .prof-tab-btn.active { background: #303134; color: #8ab4f8; }
+    
         .post-input-container { background: #1e1f20; border: 1px solid #444746; border-radius: 24px; padding: 12px 16px; margin-bottom: 30px; }
         .post-input-wrapper { display: flex; align-items: center; gap: 12px; }
         #postText, #promoteText { flex: 1; background: none; border: none; color: white; font-size: 16px; outline: none; resize: none; }
