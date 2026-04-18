@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fainder - Gateway</title>
-    <style>
+<title>JS Portfolio - Learning Lab</title>    <style>
         body { 
             background: #131314; 
             color: white; 
@@ -35,20 +34,17 @@
     </style>
 </head>
 <body id="main-content">
-
     <div id="gate-container">
         <div class="gate-box">
-            <h1>Fainder Project</h1>
-            <p style="color: #888; margin-bottom: 20px;">Access Protected</p>
-<form onsubmit="verifyGate(); return false;">
-    <input type="password" id="gate-pass" placeholder="Password">
-    <br>
-    <button type="submit">Enter</button>
-</form>
+            <h1>Mikan Project Portfolio</h1>
+            <p style="color: #888; margin-bottom: 20px;">Private Study Resource</p>
+            <form onsubmit="verifyGate(); return false;">
+                <input type="password" id="gate-pass" placeholder="Access Key">
+                <br>
+                <button type="submit">Unlock Portfolio</button>
+            </form>
         </div>
     </div>
-
-    <div id="sns-root"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
