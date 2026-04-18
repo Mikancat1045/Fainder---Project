@@ -3,45 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS Portfolio - Learning Lab</title>
+    <title>Fainder - Welcome</title>
     <style>
-        body { 
-            background: #131314; color: white; margin: 0;
-            font-family: "Google Sans", sans-serif;
-            display: flex; align-items: center; justify-content: center; height: 100vh;
+        body {
+            margin: 0;
+            background-color: #000;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-        /* SNSの器（最初は隠す） */
-        #sns-root { display: none; width: 100%; height: 100%; }
-        
-        /* ゲートウェイUI */
-        #gate-container { text-align: center; }
-        .gate-box { 
-            background: #1e1f20; padding: 40px; border-radius: 24px; 
-            border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        #gate-container {
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
         }
-        h1 { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        input { background: #28292a; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; width: 220px; outline: none; }
-        button { background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #333, #111);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #444;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+        }
+        h1 { font-weight: 300; letter-spacing: 5px; margin-bottom: 30px; }
+        .launch-btn {
+            background: none;
+            border: 1px solid #666;
+            color: #ccc;
+            padding: 12px 40px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .launch-btn:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body id="appBody">
+<body>
 
     <div id="gate-container">
-        <div class="gate-box">
-            <h1>Mikan Project Portfolio</h1>
-            <p style="color: #888; margin-bottom: 20px;">Private Study Resource</p>
-            <input type="password" id="gate-pass" placeholder="Access Key">
-            <br>
-            <button onclick="verifyGate()">Unlock Portfolio</button>
+        <div class="logo-circle">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80" style="width:60px; border-radius:10px;">
         </div>
+        <h1>FAINDER</h1>
+        <button class="launch-btn" onclick="location.href='sns.html'">Fainderを起動する</button>
     </div>
 
-    <div id="sns-root"></div>
-
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="app.js"></script>
-    <script src="gateway.js"></script>
 </body>
 </html>
