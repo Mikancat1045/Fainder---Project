@@ -1,4 +1,11 @@
-<!DOCTYPE html>&#10;<html lang="ja">&#10;<head>&#10;&#32;&#32;&#32;&#32;<meta charset="UTF-8">&#10;&#32;&#32;&#32;&#32;<meta name="viewport" content="width=device-width, initial-scale=1.0">&#10;&#32;&#32;&#32;&#32;<title>&#70;&#97;&#105;&#110;&#100;&#101;&#114;&#32;&#45;&#32;&#87;&#101;&#108;&#99;&#111;&#109;&#101;</title>&#10;&#32;&#32;&#32;&#32;<style>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>Fainder - Welcome</title>
+    <style>
         body {
             margin: 0;
             background-color: #000;
@@ -9,6 +16,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            user-select: none; /* テキスト選択不可 */
         }
         #gate-container {
             text-align: center;
@@ -36,74 +44,88 @@
             border-radius: 30px;
             cursor: pointer;
             transition: 0.3s;
+            position: relative;
+            z-index: 10;
         }
         .launch-btn:hover {
             background: white;
             color: black;
             box-shadow: 0 0 20px rgba(255,255,255,0.4);
         }
+        /* ボット用トラップ（人間には絶対に見えない） */
+        #bot-field {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>&#10;</head>&#10;<body>&#10;&#10;&#32;&#32;&#32;&#32;<div id="gate-container">&#10;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<div class="logo-circle">&#10;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80" style="width:60px; border-radius:10px;">&#10;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;</div>&#10;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<h1>&#70;&#65;&#73;&#78;&#68;&#69;&#82;</h1>&#10;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<button class="launch-btn" onclick="location.href='index2.html'">&#70;&#97;&#105;&#110;&#100;&#101;&#114;&#12434;&#36215;&#21205;&#12377;&#12427;</button>&#10;&#32;&#32;&#32;&#32;</div>&#10;&#10;&#32;&#32;&#32;&#32;<script>
-    // 右クリック禁止
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    </style>
+</head>
+<body oncontextmenu="return false;"> <div id="gate-container">
+        <div class="logo-circle">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80" style="width:60px; border-radius:10px;">
+        </div>
+        <h1>FAINDER</h1>
+        
+        <div id="bot-field">
+            <input type="text" id="trap_input" tabindex="-1">
+        </div>
 
-    // キーボードショートカット禁止 (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
-    document.onkeydown = function(e) {
-        if (e.keyCode == 123) { // F12
-            return false;
+        <button class="launch-btn" onclick="secureLaunch()">Fainderを起動する</button>
+    </div>
+
+    <script>
+        const loadTime = Date.now();
+
+        // 1. 起動処理（ボット対策込み）
+        function secureLaunch() {
+            const trap = document.getElementById('trap_input').value;
+            const clickTime = Date.now() - loadTime;
+
+            // トラップに値がある、またはクリックが速すぎる(0.5秒以内)場合はボット判定
+            if (trap !== "" || clickTime < 500) {
+                console.warn("Access Denied.");
+                return;
+            }
+
+            // 遷移先を文字結合で隠す
+            const target = ['index', '2', '.', 'h', 't', 'm', 'l'].join('');
+            location.href = target;
         }
-        if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) {
-            return false;
-        }
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // ソース表示
-            return false;
-        }
-    };
-</script>&#10;&#32;&#32;&#32;&#32;<script>
-        function launchApp() {
-    const password = prompt("アクセスコードを入力してください:");
-    
-    // パスワードが「mcp2026」の場合のみ遷移
-    if (password === "mcp2026") {
-        location.href = 'index2.html';
-    } else {
-        alert("コードが正しくありません。");
-    }
-}
-    setInterval(function() {
-        debugger;
-    }, 100);
-</script>&#10;&#32;&#32;&#32;&#32;<script>
-    setInterval(function() {
-        console.clear();
-        console.log("%c警告: ここでコードをいじらないでください", "color: red; font-size: 30px; font-weight: bold;");
-    }, 1000);
 
-        // app.js または index.html の script タグ内
-function launchWithBotCheck(e) {
-    // 1. ハニーポット確認 (隠し入力欄に値が入っていたらボット)
-    const botTrap = document.getElementById('username_hp').value;
-    if (botTrap) {
-        console.warn("Bot detected.");
-        return;
-    }
+        // 2. コンソールガード（ショートカット禁止）
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) ||
+               (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+                return false;
+            }
+        };
 
-    // 2. 実行速度チェック 
-    // (人間はページを開いて0.5秒以内にはクリックできない)
-    const timeToClick = Date.now() - pageLoadTime;
-    if (timeToClick < 500) {
-        alert("動作が速すぎます。");
-        return;
-    }
+        // 3. 無限デバッガー（コンソールを開くとフリーズさせる）
+        setInterval(function() {
+            (function() {
+                (function a() {
+                    try {
+                        (function b(i) {
+                            if (('' + (i / i)).length !== 1 || i % 20 === 0) {
+                                (function() {}).constructor('debugger')();
+                            } else {
+                                debugger;
+                            }
+                            b(++i);
+                        })(0);
+                    } catch (e) {
+                        setTimeout(a, 50);
+                    }
+                })();
+            })();
+        }, 1000);
 
-    // 3. 難読化された遷移先
-    // そのまま "index2.html" と書かず、計算で導く
-    const path = ["i", "n", "d", "e", "x", "2", ".", "h", "t", "m", "l"].join("");
-    
-    // 遷移実行
-    location.href = path;
-}
-
-// ページ読み込み時間を記録
-const pageLoadTime = Date.now();
-</script>&#10;&#32;&#32;&#32;&#32;&#10;</body>&#10;</html>
+        // 4. コンソールを常にクリア
+        setInterval(() => {
+            console.clear();
+        }, 500);
+    </script>
+</body>
+</html>
