@@ -354,16 +354,28 @@ function launchSNS() {
         switchProfileTab('posts');
     };
 
-    window.switchProfileTab = async (type) => {
-        const area = document.getElementById('profile-content-area');
-        area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
-        let html = "";
-        if (type === 'posts') {
-            const snap = await db.collection("posts").where("uid", "==", currentProfileUid).orderBy("createdAt", "desc").get();
-            snap.forEach(doc => html += renderPostCard(doc.id, doc.data()));
-        }
-        area.innerHTML = html || "<p style='text-align:center; color:#666;'>データがありません</p>";
-    };
+// プロフィールのタブ切り替えロジックの修正
+async function switchProfileTab(type) {
+    const area = document.getElementById('profile-content-area');
+    area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
+
+    // 全てのプロフィールタブから active クラスを外す
+    document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    // クリックされたタブに active クラスを付ける
+    const activeTab = document.getElementById(`p-tab-${type}`);
+    if (activeTab) activeTab.classList.add('active');
+
+    let html = "";
+    // --- データの取得処理 ---
+    if (type === 'posts') {
+        const snap = await db.collection("posts").where("uid", "==", currentProfileUid).orderBy("createdAt", "desc").get();
+        snap.forEach(doc => html += renderPostCard(doc.id, doc.data()));
+    } 
+    // ...（フォロー、スポンサーの処理はそのまま）
+    
+    area.innerHTML = html || "<p style='text-align:center; color:#666;'>データがありません</p>";
+}
 
     window.toggleSidebar = () => {
         document.getElementById('appBody').classList.toggle('sidebar-open');
