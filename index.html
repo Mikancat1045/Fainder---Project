@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fainder Project</title>
+    <title>Fainder - Protected Access</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body id="main-body">
+<body id="main-body" class="auth-mode">
 
-    <div id="gatekeeper-container">
-        <div id="step-1">
-            <h2 class="gradient-text">Fainder Project</h2>
-            <p>プロジェクトにアクセスするには<br>認証が必要です。</p>
-            <button onclick="nextStep()">次へ進む</button>
-        </div>
-
-        <div id="step-2" style="display:none;">
-            <h2>TOKEN AUTH</h2>
-            <p>合言葉を入力してください</p>
-            <input type="password" id="access-input" placeholder="Enter Token...">
-            <button onclick="checkAccess()">アクセス確認</button>
+    <div id="auth-container">
+        <div id="auth-box">
+            <h2 class="gradient-text">Fainder Access</h2>
+            <p id="auth-msg">アクセス権限を確認してください</p>
+            
+            <div id="input-area">
+                <input type="password" id="access-input" placeholder="アクセスキーを入力">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="save-token">
+                    <label for="save-token">ログイン状態を保持する</label>
+                </div>
+                <button id="auth-submit-btn" onclick="checkAccess()">アクセスを許可</button>
+            </div>
         </div>
     </div>
+
+    <div id="app-root"></div>
 
     <script src="script.js"></script>
 </body>
