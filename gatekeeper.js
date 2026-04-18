@@ -1,36 +1,41 @@
+// パスワード設定
 const _K = "mikan2026"; 
 
-// 同意ボタンを押した時
+// 同意ボタンの処理
 function nextStep() {
     const s1 = document.getElementById('step-1');
     const s2 = document.getElementById('step-2');
-    if(s1 && s2) {
+    if (s1 && s2) {
         s1.style.display = 'none';
         s2.style.display = 'block';
     }
 }
 
-// パスワードチェック
+// パスワード照合
 function checkAccess() {
-    const val = document.getElementById('access-input').value;
-    if (val === _K) {
+    const input = document.getElementById('access-input');
+    if (input && input.value === _K) {
         buildSNS();
     } else {
-        alert("トークンが違います");
+        alert("トークンが違います。");
     }
 }
 
-// SNSの組み立て
+// SNSの再構築
 function buildSNS() {
     const body = document.getElementById('main-body');
     
-    // 背景色を即座に変更
+    // 1. 既存のダミーページを削除
+    body.innerHTML = "";
     body.style.backgroundColor = "#131314";
 
-    // SNSの本体（HTMLとCSSのみ）
-    // ※ <html>や<body>タグは含めず、中身の<div>からスタートさせます
+    // 2. SNSのHTMLを注入 (文字列の開始と終了は ` です)
+    // 途中でHTMLを閉じたりしないで、一気に最後まで入れます
     body.innerHTML = `
+    <div id="sns-root">
         <style>
+    <style>
+        :root {
             --bg-color: #131314;
             --nav-bg: rgba(19, 19, 20, 1);
             --text-gemini: #e3e3e3;
@@ -107,21 +112,20 @@ function buildSNS() {
         .unblock-btn { background: #d96570; color: white; border: none; padding: 5px 12px; border-radius: 15px; cursor: pointer; font-size: 12px; }
         </style>
 
-        <div id="sns-wrapper">
-            <header>
-                <div style="font-size:20px; font-weight:bold; color:#4285f4;">Fainder</div>
-            </header>
-            
-            <section id="home" class="page active">
-                <h1>こんにちは！</h1>
-                <div id="postsList">読み込み中...</div>
-            </section>
+        <header>
+            <div style="font-size: 20px; font-weight: bold;">Fainder</div>
+        </header>
 
-            </div>
+        <section id="home" class="page active">
+            <h1>こんにちは</h1>
+            <div id="postsList">読み込み中...</div>
+        </section>
+        
+        </div>
     `;
 
-    // 最後にFirebaseなどのロジックファイルを読み込む
-    const script = document.createElement('script');
-    script.src = "core-sync.js"; 
-    document.body.appendChild(script);
+    // 3. ロジックファイルの読み込み
+    const s = document.createElement('script');
+    s.src = "core-sync.js"; 
+    document.body.appendChild(s);
 }
