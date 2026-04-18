@@ -2,43 +2,26 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikan Dev Lab</title>
+    <title>Fainder - Gateway</title>
     <style>
-        body { background: #131314; color: #e3e3e3; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        #gate-container { text-align: center; }
-        .gate-input { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1e1f20; color: white; margin-bottom: 10px; width: 220px; outline: none; }
-        .gate-btn { padding: 12px 24px; border-radius: 8px; border: none; background: #4285f4; color: white; cursor: pointer; font-weight: bold; }
+        body { background: #131314; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+        .gate-box { text-align: center; background: #1e1f20; padding: 40px; border-radius: 20px; border: 1px solid #333; }
+        input { background: #28292a; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; width: 200px; }
+        button { background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
-<body id="appBody">
-
-    <div id="gate-container">
-        <h1>Mikan Project Portal</h1>
-        <p>Experimental UI Testing Site</p>
-        <input type="password" id="gate-pass" class="gate-input" placeholder="Access Code">
+<body id="main-content">
+    <div class="gate-box">
+        <h1>Fainder Project</h1>
+        <p>パスワードを入力してください</p>
+        <input type="password" id="gate-pass" placeholder="Password">
         <br>
-        <button onclick="verifyGate()" class="gate-btn">Agree & Enter</button>
+        <button onclick="verifyGate()">Enter</button>
     </div>
 
-    <div id="sns-root" style="display:none; width: 100%;"></div>
-
-<script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
-
-<script src="app.js"></script>
-<script src="gateway.js"></script>
-
-    <script>
-        // ボット対策の即時実行
-        (function() {
-            const ua = navigator.userAgent.toLowerCase();
-            const bots = ["googlebot", "bingbot", "lighthouse", "spider"];
-            if (bots.some(b => ua.includes(b))) {
-                document.body.innerHTML = "<h1>Mikan Portfolio</h1><p>Under maintenance.</p>";
-            }
-        })();
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
+    <script src="gateway.js"></script>
 </body>
 </html>
