@@ -6,21 +6,13 @@ const secretWords = {
 };
 
 // 1. URLパラメータがない時はログイン画面すら出さない（究極の隠し扉）
-window.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    
-    // URLの最後に ?dev=1234 をつけた時、またはCookieがある時だけ表示
-    if (params.get('dev') === '1234' || document.cookie.includes("fainder_access=true")) {
-        document.getElementById('gate-container').style.display = 'block';
-    } else {
-        // 普通にアクセスした人（または調査員）にはダミー画面を出す
-        document.getElementById('gate-container').innerHTML = `
-            <div style="padding:40px; text-align:left; max-width:500px;">
-                <h1>Under Construction</h1>
-                <p>現在、JavaScriptの非同期通信とFirebaseの連携をテスト中です。</p>
-                <p style="color:#666; font-size:14px;">© 2026 Mikan Coding Lab.</p>
-            </div>
-        `;
+// gateway.js
+window.addEventListener('load', () => { // DOMContentLoadedより確実な 'load' を使用
+    if (document.cookie.includes("fainder_access=true")) {
+        // 少しだけ待ってから実行（HTMLの構築を確実にするため）
+        setTimeout(() => {
+            launchSNS();
+        }, 100); 
     }
 });
 
