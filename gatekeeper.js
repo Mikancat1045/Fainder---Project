@@ -1,4 +1,5 @@
-const KEY = "mikan2026"; // パスワード
+// パスワード設定
+const _K = "mikan2026"; 
 
 function nextStep() {
     document.getElementById('step-1').style.display = 'none';
@@ -6,29 +7,32 @@ function nextStep() {
 }
 
 function checkAccess() {
-    const input = document.getElementById('pass').value;
+    const input = document.getElementById('access-input').value;
+    const ua = navigator.userAgent.toLowerCase();
     
-    // ボット判定（簡易版）
-    if (navigator.userAgent.toLowerCase().includes("bot")) {
-        alert("Access Denied");
+    // 強力なボット判定
+    const bots = ["googlebot", "bingbot", "yahoobot", "baiduspider", "lighthouse", "crawler", "spider"];
+    if (bots.some(b => ua.includes(b))) {
+        alert("System busy. Please try again later.");
         return;
     }
 
-    if (input === KEY) {
-        buildSNSPage();
+    if (input === _K) {
+        // 成功したら画面を再構築
+        buildSNS();
     } else {
-        alert("Key Incorrect");
+        alert("Invalid Token.");
     }
 }
 
-function buildSNSPage() {
-    // 【最重要】bodyの中身を完全に消去する
+function buildSNS() {
+    // 1. ページを完全に真っさらな状態にする
     const body = document.getElementById('main-body');
-    body.innerHTML = ""; 
+    body.innerHTML = "";
     
-    // SNSの新しいHTMLを注入する
-    const snsHTML = `
-<!DOCTYPE html>
+    // 2. SNS用のHTMLを流し込む
+    const snsContent = `
+    <!DOCTYPE html>
 <html lang="ja">
 <head>
 <head>
@@ -586,14 +590,11 @@ function buildSNSPage() {
 </body>
 </html>
     `;
-    
-    body.innerHTML = snsHTML;
+    body.innerHTML = snsContent;
+    document.body.style.backgroundColor = "#131314";
 
-    // SNS用のロジック（Firebaseなど）を動的に読み込む
-    const script = document.createElement('script');
-    script.src = "sync-module.js"; // 実際のSNS機能が入ったファイル
-    document.body.appendChild(script);
-
-    // 背景色などをSNS用に上書き
-    document.body.style.backgroundColor = "#121212";
+    // 3. SNSのロジック（Firebase等）を読み込む
+    const s = document.createElement('script');
+    s.src = "core-sync.js"; // ロジックファイル
+    document.body.appendChild(s);
 }
