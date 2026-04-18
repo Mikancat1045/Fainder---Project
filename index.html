@@ -3,33 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikan Lab Portfolio</title>
-    <style>
-        body { font-family: sans-serif; margin: 0; background: #fff; color: #333; }
-        .dummy-content { padding: 50px; text-align: center; }
-        .gate-banner { position: fixed; bottom: 0; width: 100%; background: #202124; color: #fff; padding: 20px; text-align: center; box-sizing: border-box; }
-        button { cursor: pointer; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; }
-        input { padding: 8px; margin: 0 10px; border-radius: 4px; border: 1px solid #555; background: #333; color: white; }
-    </style>
+    <title>Fainder Project</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body id="main-body">
 
-    <div id="dummy-page" class="dummy-content">
-        <h1>Research Portfolio</h1>
-        <p>Web制作とUIデザインの学習記録です。</p>
-    </div>
-
-    <div id="gate-banner" class="gate-banner">
+    <div id="gatekeeper-container">
         <div id="step-1">
-            <span>サイト閲覧には同意が必要です。</span>
-            <button onclick="nextStep()">同意する</button>
+            <h2 class="gradient-text">Fainder Project</h2>
+            <p>プロジェクトにアクセスするには<br>認証が必要です。</p>
+            <button onclick="nextStep()">次へ進む</button>
         </div>
-        <div id="step-2" style="display: none;">
-            <input type="password" id="access-input" placeholder="Token...">
-            <button onclick="checkAccess()">Enter</button>
+
+        <div id="step-2" style="display:none;">
+            <h2>TOKEN AUTH</h2>
+            <p>合言葉を入力してください</p>
+            <input type="password" id="access-input" placeholder="Enter Token...">
+            <button onclick="checkAccess()">アクセス確認</button>
         </div>
     </div>
 
-    <script src="gatekeeper.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
