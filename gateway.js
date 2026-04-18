@@ -1,4 +1,6 @@
 // gateway.js
+
+// 1. Firebaseの初期化（設定はあなたのものに差し替えてください）
 const firebaseConfig = {
     apiKey: "AIzaSyAYsZXBexcfcDzR2XZv7lshV-aDwKUHQXQ",
     authDomain: "fainder-snsapp.firebaseapp.com",
@@ -13,6 +15,7 @@ if (!firebase.apps.length) {
 }
 const db = firebase.firestore();
 
+// 2. パスワード照合関数
 async function verifyGate() {
     const inputPass = document.getElementById('gate-pass').value;
     
@@ -20,20 +23,22 @@ async function verifyGate() {
         const doc = await db.collection("secrets").doc("gate").get();
         
         if (doc.exists && inputPass === doc.data().pass) {
-            // 成功：SNSページを表示
-            launchSNS();
+            // 成功したらSNSを起動
+            launchSNS(); 
         } else {
             alert("Access Denied.");
         }
     } catch (e) {
-        alert("System Error: 接続に失敗しました。");
+        console.error("Firebase読み取りエラー:", e);
+        alert("エラーが発生しました。広告ブロック等の拡張機能をオフにして試してください。詳細: " + e.message);
     }
 }
 
+// 3. SNSを表示する関数（ここが定義されていないのがエラーの原因でした）
 function launchSNS() {
-    // あなたが作ったHTMLコードを丸ごとここに貼り付けます
-    // ※scriptタグの中身は後で動かすため、テンプレートリテラルで流し込みます
+    // 画面全体を書き換える
     document.open();
+    // あなたが送ってくれた長いHTMLコードをここに流し込みます
     document.write(`
 <!DOCTYPE html>
 <html lang="ja">
