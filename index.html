@@ -2,26 +2,57 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fainder - Gateway</title>
     <style>
-        body { background: #131314; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-        .gate-box { text-align: center; background: #1e1f20; padding: 40px; border-radius: 20px; border: 1px solid #333; }
-        input { background: #28292a; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; width: 200px; }
-        button { background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        body { 
+            background: #131314; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0;
+            font-family: "Google Sans", sans-serif; 
+        }
+        /* SNS表示用のルート要素（最初は隠す） */
+        #sns-root { display: none; width: 100%; height: 100%; }
+        
+        /* ゲートウェイUI */
+        #gate-container { text-align: center; }
+        .gate-box { 
+            background: #1e1f20; 
+            padding: 40px; 
+            border-radius: 24px; 
+            border: 1px solid #333; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        input { background: #28292a; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; width: 220px; outline: none; }
+        input:focus { border-color: #4285f4; }
+        button { background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #357abd; }
     </style>
 </head>
 <body id="main-content">
-    <div class="gate-box">
-        <h1>Fainder Project</h1>
-        <p>パスワードを入力してください</p>
-        <input type="password" id="gate-pass" placeholder="Password">
-        <br>
-        <button onclick="verifyGate()">Enter</button>
+
+    <div id="gate-container">
+        <div class="gate-box">
+            <h1>Fainder Project</h1>
+            <p style="color: #888; margin-bottom: 20px;">Access Protected</p>
+            <input type="password" id="gate-pass" placeholder="Password">
+            <br>
+            <button onclick="verifyGate()">Enter</button>
+        </div>
     </div>
+
+    <div id="sns-root"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
+
+    <script src="app.js"></script>
     <script src="gateway.js"></script>
 </body>
 </html>
