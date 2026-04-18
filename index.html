@@ -3,47 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikan Programming Lab | Portfolio</title>
+    <title>Mikan Dev Lab | Portfolio</title>
     <style>
-        :root { --bg: #ffffff; --text: #333333; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
-        #page-wrapper { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .dummy-header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .project-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        #gate-banner { position: fixed; bottom: 0; width: 100%; background: #202124; color: #fff; padding: 20px; text-align: center; z-index: 10000; }
-        .gate-btn { background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        #access-input { padding: 8px; border-radius: 4px; border: 1px solid #444; background: #333; color: white; margin: 10px 0; }
+        body { font-family: sans-serif; background: #fff; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .gate-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: #202124; color: #fff; padding: 20px; text-align: center; box-sizing: border-box; }
+        .gate-btn { background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        #access-input { padding: 8px; margin: 10px; background: #333; color: #fff; border: 1px solid #555; }
     </style>
 </head>
 <body id="main-body">
 
-    <div id="page-wrapper">
-        <div class="dummy-header">
-            <h1>Mikan Project Archive</h1>
-            <p>Web技術（HTML5/JavaScript）の研究と、UIコンポーネントのテスト用ポートフォリオです。</p>
+    <div class="container">
+        <h1>Programming Research Portfolio</h1>
+        <p>JavaScriptとUIデザインの検証用サイトです。</p>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+            <h3>Module Test: CSS Grid</h3>
+            <p>レスポンシブ・レイアウトのテスト中...</p>
         </div>
-        
-        <div class="project-card">
-            <h3>Module-01: CSS Grid Layout</h3>
-            <p>グリッドレイアウトを用いたレスポンシブデザインのテスト。各種ブラウザでの挙動を確認中。</p>
-        </div>
-        <div class="project-card">
-            <h3>Module-02: API Fetch Test</h3>
-            <p>非同期通信を用いたデータ取得のプロトタイプ。将来的にブログシステムへの統合を予定しています。</p>
-        </div>
-        <footer style="margin-top: 50px; color: #999; font-size: 12px;">© 2026 Mikan Lab.</footer>
     </div>
 
-    <div id="gate-banner">
+    <div id="gate-banner" class="gate-banner">
         <div id="step-1">
-            <p>当サイトのフルコンテンツを閲覧するには、Cookieの使用に同意してください。</p>
-            <button class="gate-btn" onclick="nextStep()">同意して次へ</button>
+            <p>コンテンツを表示するにはCookieに同意してください。</p>
+            <button class="gate-btn" onclick="nextStep()">同意する</button>
         </div>
         <div id="step-2" style="display: none;">
-            <p>アクセストークンを入力してください</p>
-            <input type="password" id="access-input" placeholder="Enter Token">
-            <br>
-            <button class="gate-btn" onclick="checkAccess()">アクセスを許可</button>
+            <p>トークンを入力してください</p>
+            <input type="password" id="access-input" placeholder="Token...">
+            <button class="gate-btn" onclick="checkAccess()">Enter</button>
         </div>
     </div>
 
