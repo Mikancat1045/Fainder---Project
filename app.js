@@ -68,8 +68,12 @@ function launchSNS() {
 .tab-btn {
     flex-shrink: 0; /* ボタンが潰れないようにする */
 }
-        .tab-btn.active, .prof-tab-btn.active { background: #303134; color: #8ab4f8; }
-        
+/* 選択されているタブのデザイン */
+.tab-btn.active, .prof-tab-btn.active {
+    background: #303134 !important; /* 背景を明るいグレーに */
+    color: #8ab4f8 !important;      /* 文字を青色に */
+    border-bottom: 2px solid #8ab4f8; /* 下線をつけるとより「タブ」っぽくなります */
+}        
         .post-input-container { background: #1e1f20; border: 1px solid #444746; border-radius: 24px; padding: 12px 16px; margin-bottom: 30px; }
         .post-input-wrapper { display: flex; align-items: center; gap: 12px; }
         #postText, #promoteText { flex: 1; background: none; border: none; color: white; font-size: 16px; outline: none; resize: none; }
@@ -445,54 +449,46 @@ function loadPosts() {
 
     // --- 修正されたロジック部分 ---
 
-window.switchTab = async (tabType) => {
+    // --- タイムラインのタブ切り替え ---
+window.switchTab = (tabType) => {
     currentTimelineTab = tabType;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    const target = document.getElementById(`tab-${tabType}`);
-    if (target) target.classList.add('active');
+
+    // 1. 全てのタイムラインボタンから active クラスを消す
+    document.querySelectorAll('.timeline-tabs .tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 2. クリックされたボタンにだけ active クラスを付ける
+    const activeBtn = document.getElementById(`tab-${tabType}`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    // 3. 投稿を再読み込み
     loadPosts();
 };
 
+// --- プロフィールのタブ切り替え ---
 window.switchProfileTab = async (type) => {
-    const area = document.getElementById('profile-content-area');
-    if (!area) return;
-    area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
+    currentProfileTab = type; // 現在のタブを保持
 
-    document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
+    // 1. 全てのプロフィールタブから active クラスを消す
+    document.querySelectorAll('.prof-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 2. クリックされたボタンに active クラスを付ける
+    // IDが p-tab-posts, p-tab-following などの形式になっているか確認
     const activeTab = document.getElementById(`p-tab-${type}`);
-    if (activeTab) activeTab.classList.add('active');
-
-    let html = "";
-    try {
-        if (type === 'posts') {
-            const snap = await db.collection("posts").where("uid", "==", currentProfileUid).orderBy("createdAt", "desc").get();
-            snap.forEach(doc => html += renderPostCard(doc.id, doc.data()));
-        } else if (type === 'following') {
-            const snap = await db.collection("follows").where("followerId", "==", currentProfileUid).get();
-            for (const doc of snap.docs) {
-                const u = await db.collection("users").doc(doc.data().followingId).get();
-                const ud = u.data() || { name: "不明", icon: "" };
-                html += `<div class="list-item"><div class="list-item-info" onclick="showUserProfile('${u.id}')"><img src="${ud.icon}" class="user-icon-img"><span>${ud.name}</span></div></div>`;
-            }
-        } else if (type === 'followers') {
-            const snap = await db.collection("follows").where("followingId", "==", currentProfileUid).get();
-            for (const doc of snap.docs) {
-                const u = await db.collection("users").doc(doc.data().followerId).get();
-                const ud = u.data() || { name: "不明", icon: "" };
-                html += `<div class="list-item"><div class="list-item-info" onclick="showUserProfile('${u.id}')"><img src="${ud.icon}" class="user-icon-img"><span>${ud.name}</span></div></div>`;
-            }
-        } else if (type === 'sponsors') {
-            const snap = await db.collection("sponsors").where("toUid", "==", currentProfileUid).get();
-            snap.forEach(doc => {
-                const s = doc.data();
-                html += `<div class="list-item"><div class="list-item-info"><span><strong>${s.fromName}</strong> さん</span></div><div class="sponsor-msg">${s.message || ""}</div></div>`;
-            });
-        }
-    } catch (e) {
-        console.error(e);
-        html = "<p style='text-align:center; color:red;'>エラーが発生しました</p>";
+    if (activeTab) {
+        activeTab.classList.add('active');
     }
-    
-    area.innerHTML = html || "<p style='text-align:center; color:#666;'>データがありません</p>";
+
+    // 3. コンテンツの表示（読み込み中...）
+    const area = document.getElementById('profile-content-area');
+    if (area) area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
+
+    // ここにデータ取得ロジック（前回の内容）を記述
+    // ...
 };
 }
