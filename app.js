@@ -121,9 +121,11 @@ function launchSNS() {
 
     <section id="timeline" class="page">
         <h2>タイムライン</h2>
-        <div class="timeline-tabs">
-            <button id="tab-new" class="tab-btn active" onclick="switchTab('new')">最新</button>
-        </div>
+<div class="timeline-tabs">
+    <button id="tab-new" class="tab-btn active" onclick="switchTab('new')">最新</button>
+    <button id="tab-following" class="tab-btn" onclick="switchTab('following')">フォロー中</button>
+    <button id="tab-recommend" class="tab-btn" onclick="switchTab('recommend')">おすすめ</button>
+</div>
         <div class="post-input-container">
             <div class="post-input-wrapper">
                 <img id="user-post-icon" src="https://api.dicebear.com/7.x/avataaars/svg?seed=guest" class="user-icon-img">
