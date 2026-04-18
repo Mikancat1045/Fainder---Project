@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikan Dev Lab - Portfolio</title>
-    <link rel="stylesheet" href="style.css"> </head>
-<body id="main-root">
-    <div id="gateway-ui" style="text-align: center; padding-top: 100px; font-family: sans-serif;">
-        <h1>Welcome to Mikan Project</h1>
-        <p>This site uses cookies to improve your experience.</p>
-        <div id="pass-area" style="margin-top: 20px;">
-            <input type="password" id="entry-pass" placeholder="Enter Access Code" 
-                   style="padding: 10px; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff;">
-            <button onclick="checkAccess()" style="padding: 10px 20px; cursor: pointer;">Agree & Enter</button>
-        </div>
+    <title>MikanChet Project Portfolio</title>
+    <style>
+        body { background: #131314; color: #e3e3e3; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #gate-container { text-align: center; }
+        .gate-input { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1e1f20; color: white; margin-bottom: 10px; width: 220px; outline: none; }
+        .gate-btn { padding: 12px 24px; border-radius: 8px; border: none; background: #4285f4; color: white; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body id="appBody">
+
+    <div id="gate-container">
+        <h1>Mikan Project</h1>
+        <p>This is a research project for web development.</p>
+        <p style="font-size: 12px; color: #888;">Please enter the access code to view the demo.</p>
+        <input type="password" id="gate-pass" class="gate-input" placeholder="Access Code">
+        <br>
+        <button onclick="verifyGate()" class="gate-btn">Enter Demo</button>
     </div>
 
-    <div id="app-container" style="display: none;"></div>
+    <div id="sns-root" style="display:none; width: 100%;"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
+    
     <script src="gateway.js"></script>
     <script src="app.js"></script>
 </body>
