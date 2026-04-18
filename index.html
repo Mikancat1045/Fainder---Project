@@ -78,4 +78,32 @@
         console.clear();
         console.log("%c警告: ここでコードをいじらないでください", "color: red; font-size: 30px; font-weight: bold;");
     }, 1000);
+
+        // app.js または index.html の script タグ内
+function launchWithBotCheck(e) {
+    // 1. ハニーポット確認 (隠し入力欄に値が入っていたらボット)
+    const botTrap = document.getElementById('username_hp').value;
+    if (botTrap) {
+        console.warn("Bot detected.");
+        return;
+    }
+
+    // 2. 実行速度チェック 
+    // (人間はページを開いて0.5秒以内にはクリックできない)
+    const timeToClick = Date.now() - pageLoadTime;
+    if (timeToClick < 500) {
+        alert("動作が速すぎます。");
+        return;
+    }
+
+    // 3. 難読化された遷移先
+    // そのまま "index2.html" と書かず、計算で導く
+    const path = ["i", "n", "d", "e", "x", "2", ".", "h", "t", "m", "l"].join("");
+    
+    // 遷移実行
+    location.href = path;
+}
+
+// ページ読み込み時間を記録
+const pageLoadTime = Date.now();
 </script>&#10;&#32;&#32;&#32;&#32;&#10;</body>&#10;</html>
