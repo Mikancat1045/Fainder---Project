@@ -452,26 +452,130 @@ window.switchTab = (tabType) => {
 };
 
 // --- プロフィールのタブ切り替え ---
-window.switchProfileTab = async (type) => {
-    currentProfileTab = type; // 現在のタブを保持
+// --- 追加・修正が必要なプロフィールのタブ切り替えロジック ---
+    window.switchProfileTab = async (type) => {
+        const area = document.getElementById('profile-content-area');
+        if (!area) return;
 
-    // 1. 全てのプロフィールタブから active クラスを消す
-    document.querySelectorAll('.prof-tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+        // タブの活性化表示切り替え
+        document.querySelectorAll('.prof-tab-btn').forEach(btn => btn.classList.remove('active'));
+        const activeTab = document.getElementById(`p-tab-${type}`);
+        if (activeTab) activeTab.classList.add('active');
 
-    // 2. クリックされたボタンに active クラスを付ける
-    // IDが p-tab-posts, p-tab-following などの形式になっているか確認
-    const activeTab = document.getElementById(`p-tab-${type}`);
-    if (activeTab) {
-        activeTab.classList.add('active');
-    }
+        area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
 
-    // 3. コンテンツの表示（読み込み中...）
-    const area = document.getElementById('profile-content-area');
-    if (area) area.innerHTML = "<p style='text-align:center;'>読み込み中...</p>";
+        try {
+            if (type === 'posts') {
+                // そのユーザーの投稿を取得
+                const snap = await db.collection("posts")
+                    .where("uid", "==", currentProfileUid)
+                    .orderBy("createdAt", "desc").get();
+                
+                area.innerHTML = "";
+                snap.forEach(doc => {
+                    area.innerHTML += renderPostCard(doc.id, doc.data());
+                });
+                if (area.innerHTML === "") area.innerHTML = "<p style='text-align:center; color:#666;'>投稿がありません</p>";
 
-    // ここにデータ取得ロジック（前回の内容）を記述
-    // ...
-};
+            } else if (type === 'following' || type === 'followers') {
+                // フォロー・フォロワー一覧の取得
+                const field = (type === 'following') ? "followerId" : "followingId";
+                const targetField = (type === 'following') ? "followingId" : "followerId";
+                
+                const snap = await db.collection("follows").where(field, "==", currentProfileUid).get();
+                area.innerHTML = "";
+                
+                for (const doc of snap.docs) {
+                    const relation = doc.data();
+                    const userDoc = await db.collection("users").doc(relation[targetField]).get();
+                    const userData = userDoc.exists ? userDoc.data() : { name: "Unknown", icon: "" };
+                    
+                    area.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-info" onclick="showUserProfile('${userDoc.id}')">
+                                <img src="${userData.icon}" class="user-icon-img" style="width:30px; height:30px;">
+                                <span>${userData.name}</span>
+                            </div>
+                        </div>`;
+                }
+                if (area.innerHTML === "") area.innerHTML = `<p style='text-align:center; color:#666;'>${type === 'following' ? 'フォロー' : 'フォロワー'}はいません</p>`;
+
+            } else if (type === 'blocks') {
+                // ブロックリスト（自分が見る時のみ有効な想定）
+                if (auth.currentUser && auth.currentUser.uid === currentProfileUid) {
+                    const snap = await db.collection("blocks").where("blockerId", "==", auth.currentUser.uid).get();
+                    area.innerHTML = "";
+                    for (const doc of snap.docs) {
+                        const bId = doc.data().blockedId;
+                        area.innerHTML += `<div class="list-item"><span>ID: ${bId}</span><button onclick="unblock('${bId}')" style="color:#d96570; background:none; border:none; cursor:pointer;">解除</button></div>`;
+                    }
+                } else {
+                    area.innerHTML = "閲覧権限がありません";
+                }
+            } else if (type === 'sponsors') {
+                area.innerHTML = "<p style='text-align:center; color:#666;'>スポンサーはいません</p>";
+            }
+        } catch (e) {
+            console.error(e);
+            area.innerHTML = "エラーが発生しました";
+        }
+    };
+
+    // --- フォロー・ブロック機能の実装 ---
+    window.followUser = async (targetUid) => {
+        const user = auth.currentUser;
+        if (!user) return alert("ログインが必要です");
+        if (user.uid === targetUid) return alert("自分をフォローすることはできません");
+
+        await db.collection("follows").add({
+            followerId: user.uid,
+            followingId: targetUid,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // 通知を送る
+        await db.collection("notifications").add({
+            toUid: targetUid,
+            fromName: user.displayName,
+            message: "あなたをフォローしました",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        alert("フォローしました");
+        showUserProfile(targetUid); // 表示更新
+    };
+
+    // --- プロフィール画面のアクションボタン生成（フォローボタンなど） ---
+    // showUserProfile関数の中に以下の処理を組み込んでください
+    const oldShowUserProfile = window.showUserProfile;
+    window.showUserProfile = async (uid) => {
+        await oldShowUserProfile(uid); // 元の処理（データ取得・表示）を実行
+        
+        const actionArea = document.getElementById('prof-actions');
+        if (!actionArea) return;
+        actionArea.innerHTML = "";
+
+        if (auth.currentUser && auth.currentUser.uid !== uid) {
+            // 他人のプロフィールの場合はフォローボタンを表示
+            const followCheck = await db.collection("follows")
+                .where("followerId", "==", auth.currentUser.uid)
+                .where("followingId", "==", uid).get();
+            
+            if (followCheck.empty) {
+                actionArea.innerHTML = `<button class="btn-follow" onclick="followUser('${uid}')">フォローする</button>`;
+            } else {
+                actionArea.innerHTML = `<span style="color:#888;">フォロー中</span>`;
+            }
+            actionArea.innerHTML += `<button class="btn-block" onclick="blockUser('${uid}')">ブロック</button>`;
+        }
+    };
+
+    window.blockUser = async (uid) => {
+        if (!confirm("このユーザーをブロックしますか？")) return;
+        await db.collection("blocks").add({
+            blockerId: auth.currentUser.uid,
+            blockedId: uid
+        });
+        location.reload();
+    };
 }
