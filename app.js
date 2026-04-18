@@ -356,6 +356,59 @@ function launchSNS() {
         switchProfileTab('posts');
     };
 
+    let currentTimelineTab = 'new';
+
+async function switchTab(tabType) {
+    currentTimelineTab = tabType;
+    
+    // タブの見た目の切り替え
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tabType}`).classList.add('active');
+    
+    // 投稿の再読み込み
+    loadPosts();
+}
+
+function loadPosts() {
+    db.collection("posts").orderBy("createdAt", "desc").onSnapshot(async snap => {
+        const list = document.getElementById('postsList');
+        if (!list) return;
+        list.innerHTML = "";
+
+        // フォロー中タブの場合、自分がフォローしている人のIDリストを取得
+        let followingUids = [];
+        if (currentTimelineTab === 'following' && auth.currentUser) {
+            const followSnap = await db.collection("follows").where("followerId", "==", auth.currentUser.uid).get();
+            followingUids = followSnap.docs.map(doc => doc.data().followingId);
+        }
+
+        snap.forEach(doc => {
+            const d = doc.data();
+            if (d.isPromote === true || blockedIds.includes(d.uid)) return;
+
+            if (currentTimelineTab === 'new') {
+                // 最新：全表示
+                list.innerHTML += renderPostCard(doc.id, d);
+            } else if (currentTimelineTab === 'following') {
+                // フォロー中：フォローリストに含まれる人のみ
+                if (followingUids.includes(d.uid)) {
+                    list.innerHTML += renderPostCard(doc.id, d);
+                }
+            } else if (currentTimelineTab === 'recommend') {
+                // おすすめ：例えば「スポンサーがついている投稿」や「特定の文字数以上の投稿」など
+                // ここでは簡易的に「10文字以上の投稿」を抽出する例
+                if (d.content.length > 10) {
+                    list.innerHTML += renderPostCard(doc.id, d);
+                }
+            }
+        });
+        
+        if (list.innerHTML === "") {
+            list.innerHTML = "<p style='text-align:center; color:#666;'>表示する投稿がありません</p>";
+        }
+    });
+}
+
 // プロフィールのタブ切り替えロジックの修正
 async function switchProfileTab(type) {
     const area = document.getElementById('profile-content-area');
