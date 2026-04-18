@@ -8,37 +8,29 @@ const firebaseConfig = {
     appId: "1:536723303370:web:09317f23f335d1a6bf3d33"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 async function verifyGate() {
     const inputPass = document.getElementById('gate-pass').value;
-    const ua = navigator.userAgent.toLowerCase();
-    const bots = ["googlebot", "bingbot", "lighthouse"];
-
-    // ボット検知（簡易）
-    if (bots.some(bot => ua.includes(bot))) return;
+    const db = firebase.firestore();
 
     try {
-        // Firebaseからパスワードを取得して照合
         const doc = await db.collection("secrets").doc("gate").get();
         if (doc.exists && inputPass === doc.data().pass) {
-            // 成功：クッキーに保存してSNS起動
             document.cookie = "mikan_access=true; max-age=86400; path=/";
-            launchSNS();
+            launchSNS(); // app.js 内の関数を起動
         } else {
-            alert("Access Denied.");
+            alert("コードが正しくありません");
         }
     } catch (e) {
-        console.error(e);
-        alert("System Error.");
+        alert("認証エラー");
     }
 }
 
-// クッキーがあれば自動でSNSを表示
-window.onload = () => {
+window.addEventListener('load', () => {
     if (document.cookie.includes("mikan_access=true")) {
         launchSNS();
     }
-};
+});
