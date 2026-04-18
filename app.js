@@ -1,12 +1,11 @@
-// --- 1. Firebase初期化 (ご自身の値に書き換えてください) ---
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyAYsZXBexcfcDzR2XZv7lshV-aDwKUHQXQ",
+        authDomain: "fainder-snsapp.firebaseapp.com",
+        projectId: "fainder-snsapp",
+        storageBucket: "fainder-snsapp.firebasestorage.app",
+        messagingSenderId: "536723303370",
+        appId: "1:536723303370:web:09317f23f335d1a6bf3d33"
+    };
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
